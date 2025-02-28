@@ -10,6 +10,10 @@ case class Person(name: String, age: Int)
 class DataService(quill: Quill.H2[SnakeCase]) {
   import quill._
 
+  def report() = run (
+     sql"""SELECT max(age) FROM person""".as[Query[Int]]
+  )
+
   def insertTwoPersons(person1: Person, person2: Person) = {
       val action1 = run(query[Person].insertValue(lift(person1)))
       val action2 = run(query[Person].insertValue(lift(person2)))
@@ -30,7 +34,8 @@ class DataService(quill: Quill.H2[SnakeCase]) {
 
 object DataService {
 
-  def insertTwoPersons(person1: Person, person2: Person) =  ZIO.serviceWithZIO[DataService](_.insertTwoPersons(person1, person2))
+  def report() = ZIO.serviceWithZIO[DataService](_.report())
+  def insertTwoPersons(person1: Person, person2: Person) = ZIO.serviceWithZIO[DataService](_.insertTwoPersons(person1, person2))
   def updatePerson(name: String, age: Int) = ZIO.serviceWithZIO[DataService](_.updatePerson(name, age))
   def findPerson(name: String) = ZIO.serviceWithZIO[DataService](_.findPerson(name))
   def getPeople: ZIO[DataService, SQLException, List[Person]] = ZIO.serviceWithZIO[DataService](_.getPeople)
@@ -48,10 +53,12 @@ object Main extends ZIOAppDefault {
       _      <- (DataService.insertTwoPersons(Person("Jack", 1999), Person("John", 1999))).catchAllDefect(e => ZIO.logError(e.getMessage))
       after  <- DataService.findPerson("Jack")
       _      <- DataService.updatePerson("Jack", 2999)
+      count  <- DataService.report()
       end    <- DataService.getPeople
       _      <- ZIO.logInfo(s"***************")
       _      <- ZIO.logInfo(s"before: ${before.size} $before")
       _      <- ZIO.logInfo(s"after:  ${after.size} $after")
+      _      <- ZIO.logInfo(s"count   $count")
       _      <- ZIO.logInfo(s"end:    $end")
       _      <- ZIO.logInfo(s"***************")
     } yield ())
