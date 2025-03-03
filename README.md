@@ -7,7 +7,10 @@
 3. sbt
 4. H2SQL
 
-# H2SQL
+# Installation
+run
+`brew install sbt`
+
 Download the H2SQL RDBMS jar from [here](https://search.maven.org/remotecontent?filepath=com/h2database/h2/2.3.232/h2-2.3.232.jar) and then run
 `java -jar h2*.jar`
 
@@ -17,3 +20,5 @@ create table
 ```
 create table person (name varchar(255), age int)
 ``` 
+
+`shell> sbt "runMain MainProg"

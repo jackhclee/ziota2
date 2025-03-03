@@ -68,7 +68,7 @@ object DataService {
   val live = ZLayer.fromFunction(new DataService(_))
 }
 
-object Main extends ZIOAppDefault {
+object MainProg extends ZIOAppDefault {
 
   import Squad._
 
