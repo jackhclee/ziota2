@@ -21,4 +21,5 @@ create table
 create table person (name varchar(255), age int)
 ``` 
 
+run the main program
 `shell> sbt "runMain MainProg"`
