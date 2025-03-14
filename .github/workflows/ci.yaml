@@ -5,6 +5,7 @@ on: workflow_dispatch
 jobs:
   checkout:
     name: Checkout
+    runs-on: ubutu-latest
     steps:
       - id: co
         name: Checkout source code
@@ -12,6 +13,7 @@ jobs:
 
   build:
     name: Build
+    runs-on: ubutu-latest
     steps:
       - id: build
         name: Build source
