@@ -15,7 +15,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - id: prep-build
+        name: Setup SBT
+        uses: sbt/setup-sbt@v1
       - id: build
         name: Build source
-        uses: sbt/setup-sbt@v1
+        run: sbt compile
 
