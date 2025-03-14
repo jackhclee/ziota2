@@ -26,8 +26,9 @@ jobs:
         uses: sbt/setup-sbt@v1
       - id: restore
         name: Restore source
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
+          path: ziota2
           key: src
       - id: build
         name: Build source
