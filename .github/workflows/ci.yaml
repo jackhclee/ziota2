@@ -14,7 +14,7 @@ jobs:
         name: Cache source
         uses: actions/cache/save@v4
         with:
-          path: ziota2
+          path: ${{ github.workspace }}
           key: src
   build:
     name: Build
@@ -27,7 +27,7 @@ jobs:
         name: Restore source
         uses: actions/cache/restore@v4
         with:
-          path: ziota2
+          path: ${{ github.workspace }}
           key: src
       - id: build
         name: Build source
