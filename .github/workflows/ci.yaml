@@ -10,6 +10,12 @@ jobs:
       - id: co
         name: Checkout source code
         uses: actions/checkout@v4
+      - id: cache
+        name: Cache source
+        uses: actions/cache@v4
+        with:
+          path: ziota2
+          key: src
 
   build:
     name: Build
@@ -18,6 +24,11 @@ jobs:
       - id: prep-build
         name: Setup SBT
         uses: sbt/setup-sbt@v1
+      - id: restore
+        name: Restore source
+        uses: actions/cache@v4
+        with:
+          key: src
       - id: build
         name: Build source
         run: sbt compile
