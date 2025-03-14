@@ -1,7 +1,6 @@
 name: CI
 
-on:
-  workflow_dispatch
+on: workflow_dispatch
 
 jobs:
   checkout:
@@ -11,10 +10,10 @@ jobs:
         name: Checkout source code
         uses: actions/checkout@v4
 
-    checkout:
-      name: Build
-      steps:
-        - id: build
-          name: Build source
-          uses: sbt/setup-sbt@v1
+  build:
+    name: Build
+    steps:
+      - id: build
+        name: Build source
+        uses: sbt/setup-sbt@v1
 
