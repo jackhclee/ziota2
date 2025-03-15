@@ -8,7 +8,7 @@ object MainSpec extends ZIOSpecDefault {
 
   def spec =
     suite("MainSpec")(
-      test("a is a") (
+      test("should get HTTP response from WireMock") (
        assertTrue(requests.get(s"http://localhost:${wiremockServer.getPort}/helloworld").text() == "Hello, world!")
       )
     )
