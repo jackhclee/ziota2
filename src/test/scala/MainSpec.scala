@@ -3,24 +3,7 @@ import zio.test._
 
 object MainSpec extends ZIOSpecDefault {
   val wiremockServer: WireMockContainer = new WireMockContainer("wiremock/wiremock:3.12.1")
-//  wiremockServer.withMappingFromResource("mappings/hellowrold.json")
-  wiremockServer.withMappingFromJSON("helloworld",
-    """
-      |{
-      |  "request": {
-      |    "method": "GET",
-      |    "url": "/helloworld"
-      |  },
-      |
-      |  "response": {
-      |    "status": 200,
-      |    "body": "Hello, world!",
-      |    "headers": {
-      |      "Content-Type": "text/plain"
-      |    }
-      |  }
-      |}
-      |""".stripMargin)
+  wiremockServer.withMappingFromResource("mappings/helloworld.json")
   wiremockServer.start()
 
   def spec =
