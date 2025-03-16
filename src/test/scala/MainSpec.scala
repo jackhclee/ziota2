@@ -1,5 +1,5 @@
 import org.wiremock.integrations.testcontainers.WireMockContainer
-import zio.ZIO
+import zio.{Scope, ZIO}
 import zio.test._
 import zio.http._
 
@@ -8,14 +8,31 @@ object MainSpec extends ZIOSpecDefault {
   wiremockServer.withMappingFromResource("mappings/helloworld.json")
   wiremockServer.start()
 
-  def spec =
+  def spec = {
     suite("MainSpec")(
-      test("should get HTTP response from WireMock") (
-        for {
-          client   <- ZIO.serviceWith[Client](_.host("localhost").port(wiremockServer.getPort))
-          response <- client.batched(Request.get("/helloworld"))
-          body     <- response.body.asString
-        } yield assertTrue(body == "Hello, world!")
+      suite("Group1")(
+        test("should get HTTP response from WireMock")(
+          for {
+            client <- ZIO.serviceWith[Client](_.host("localhost").port(wiremockServer.getPort))
+            response <- client.batched(Request.get("/helloworld"))
+            body <- response.body.asString
+          } yield assertTrue(body == "Hello, world!")
+        ).provide(Client.default),
+        test("should acquire and release resources successfully")(
+          for {
+            _ <- ZIO.log(s"Hello")
+            _ <- ZIO.scoped(ZIO.acquireRelease(ZIO.logInfo("Get A"))(r => ZIO.logInfo("Release A")))
+            _ <- ZIO.log(s"End")
+          } yield assertTrue(true)
+        ),
+        test("should acquire and release resources successfully at end of scope")(
+          for {
+            _ <- ZIO.log(s"Hello")
+            _ <- ZIO.acquireRelease(ZIO.logInfo("Get B"))(r => ZIO.logInfo("Release B"))
+            _ <- ZIO.log(s"End")
+          } yield assertTrue(true)
+        )
       )
-    ).provide(Client.default)
+    ) @@ TestAspect.sequential
+  }
 }
