@@ -16,6 +16,7 @@ object MainSpec extends ZIOSpecDefault {
             client <- ZIO.serviceWith[Client](_.host("localhost").port(wiremockServer.getPort))
             response <- client.batched(Request.get("/helloworld"))
             body <- response.body.asString
+            _ <- ZIO.logInfo(s"$body")
           } yield assertTrue(body == "Hello, world!")
         ).provide(Client.default),
         test("should acquire and release resources successfully")(
