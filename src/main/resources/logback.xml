@@ -8,8 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="dev.zio" level="DEBUG" />
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

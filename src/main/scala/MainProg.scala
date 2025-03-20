@@ -2,6 +2,7 @@ import io.getquill.{H2ZioJdbcContext, Query, SnakeCase}
 import io.getquill.jdbczio.Quill
 import zio.Exit.Success
 import zio.json.{DecoderOps, DeriveJsonDecoder, DeriveJsonEncoder, EncoderOps, JsonDecoder, JsonEncoder}
+import zio.logging.backend.SLF4J
 import zio.profiling.sampling.SamplingProfiler
 import zio.profiling.sampling.SamplingProfiler._
 import zio.{Duration, ExitCode, Scope, ZIO, ZIOApp, ZIOAppArgs, ZIOAppDefault, ZLayer}
@@ -71,6 +72,8 @@ object DataService {
 object MainProg extends ZIOAppDefault {
 
   import Squad._
+
+  override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] = zio.Runtime.removeDefaultLoggers >>> SLF4J.slf4j
 
   def makeJson(squad: Squad) = {
     val jsonStr = squad.toJson

@@ -1,5 +1,5 @@
 import org.wiremock.integrations.testcontainers.WireMockContainer
-import zio.{Scope, ZIO}
+import zio.{Scope, ZIO, ZInputStream}
 import zio.test._
 import zio.http._
 
@@ -32,8 +32,18 @@ object MainSpec extends ZIOSpecDefault {
             _ <- ZIO.acquireRelease(ZIO.logInfo("Get B"))(r => ZIO.logInfo("Release B"))
             _ <- ZIO.log(s"End")
           } yield assertTrue(true)
+        ),
+        test("read")(
+          for {
+            zis   <- ZIO.readFileInputStream("src/test/resources/mappings/helloworld.json")
+            bytes <- zis.readAll(8000)
+            _     <- ZIO.logInfo(s"${bytes.length}")
+            _     <- ZIO.logInfo(bytes.asString)
+            zos   <- ZIO.writeFileOutputStream("aa.json")
+            _     <- zos.write(bytes)
+          } yield assertTrue(true)
         )
       )
-    ) @@ TestAspect.sequential
+    ) @@ TestAspect.sequential @@ TestAspect.timed
   }
 }
