@@ -1,0 +1,1 @@
+create table shop(name varchar(255), address varchar(255));

@@ -1,0 +1,1 @@
+create table book(title varchar(255), price int);

@@ -1,0 +1,1 @@
+docker run --rm --network my-bridge-network -v ./sql:/flyway/sql -v ./drivers:/flyway/drivers redgate/flyway migrate -driver="org.postgresql.Driver" -url="jdbc:postgresql://host.docker.internal:5432/library" -user=postgres -password=mysecretpassword

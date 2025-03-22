@@ -1,0 +1,1 @@
+alter table book add column pub_date date;
