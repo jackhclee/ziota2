@@ -8,7 +8,7 @@ on:
         description: OS to tests
         default: "[\"windows\", \"linux\"]"
 jobs:
-  print:
+  run_os:
     runs-on: ubuntu-latest
     strategy:
       matrix:
