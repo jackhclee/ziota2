@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: ${{ need.steps.outputs.os }}
+        os: ${{ env.os }}
     steps:
       - name: print_title
         run:
