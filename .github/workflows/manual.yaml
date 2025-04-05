@@ -10,7 +10,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     env:
-      os: fromJSON(format("[{0}]", "${{ inputs.os }}"))
+      os: "[1,2]" #fromJSON(format("[{0}]", "${{ inputs.os }}"))
     outputs:
       os: ${{ steps.prepare.outputs.os }}
     steps:
@@ -26,7 +26,7 @@ jobs:
       os: "A, B"
     strategy:
       matrix:
-        os: [A, B]
+        os: ${{ needs.prepare.outputs.os }}
     steps:
       - name: print_title
         run: |
