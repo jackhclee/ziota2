@@ -10,13 +10,13 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     env:
-      os: fromJSON(format("[{0}]", "${{ inputs.os }}"))
+      os: ${{ fromJSON(format("[{0}]", "${{ inputs.os }}")) }}
     outputs:
       os: ${{ steps.prepare.outputs.os }}
     steps:
       - name: prepare
         run: |
-          echo ${{ env.os }}"
+          echo ${{ env.os }}
           echo "os=${{ env.os }}" >> $GITHUB_OUTPUT
 
   print:
