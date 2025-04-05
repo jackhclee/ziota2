@@ -22,7 +22,7 @@ jobs:
       os: "A, B"
     strategy:
       matrix:
-        os: ${{ env.os }}
+        os: ${{ steps.prepare.outputs.os }}
     steps:
       - name: print_title
         run:
