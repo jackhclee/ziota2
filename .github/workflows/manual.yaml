@@ -10,7 +10,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     env:
-      os: ${{ fromJSON(format("[{0}]", "${{ inputs.os }}")) }}
+      os: fromJSON(format("[{0}]", "${{ inputs.os }}"))
     outputs:
       os: ${{ steps.prepare.outputs.os }}
     steps:
