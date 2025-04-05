@@ -18,6 +18,8 @@ jobs:
 
   print:
     runs-on: ubuntu-latest
+    env:
+      os: [A, B]
     strategy:
       matrix:
         os: ${{ env.os }}
