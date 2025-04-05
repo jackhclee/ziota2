@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: fromJson(format('[{0}]', '${{ inputs.os }}'))
+        os: fromJSON(format('[{0}]', '${{ inputs.os }}'))
     steps:
       - name: print_title
         run:
