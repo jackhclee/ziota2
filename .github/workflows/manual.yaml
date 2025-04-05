@@ -22,9 +22,10 @@ jobs:
       os: "A, B"
     strategy:
       matrix:
-        os: ${{ steps.prepare.outputs.os }}
+        os: [A, B]
     steps:
       - name: print_title
-        run:
+        run: |
           echo ${{ matrix.os }}
+          echo "${{ steps.prepare.outputs.os }}"
 
