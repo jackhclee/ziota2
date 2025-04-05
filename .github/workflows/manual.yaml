@@ -1,0 +1,19 @@
+name: Manual
+on:
+  workflow_dispatch:
+    inputs:
+      os:
+        type: string
+        required: true
+        description: OS to tests
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: fromJson(format('[{0}]',${{ inputs.os }}))
+    steps:
+      - name: print_title
+        run:
+          echo ${{ matrix.os }}
+
