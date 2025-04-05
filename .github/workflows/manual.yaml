@@ -19,7 +19,7 @@ jobs:
   print:
     runs-on: ubuntu-latest
     env:
-      os: [A, B]
+      os: "A, B"
     strategy:
       matrix:
         os: ${{ env.os }}
