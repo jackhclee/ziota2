@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: prepare
         run: |
+          echo ${{ env.os }}"
           echo "os=${{ env.os }}" >> $GITHUB_OUTPUT
 
   print:
