@@ -6,7 +6,7 @@ on:
         type: string
         required: true
         description: OS to tests
-        default: "[windows, linux]"
+        default: "[\"windows\", \"linux\"]"
 jobs:
   print:
     runs-on: ubuntu-latest
