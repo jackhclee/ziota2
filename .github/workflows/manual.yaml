@@ -6,30 +6,15 @@ on:
         type: string
         required: true
         description: OS to tests
+        default: "[windows, linux]"
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    env:
-      os: "[1,2]" #fromJSON(format("[{0}]", "${{ inputs.os }}"))
-    outputs:
-      os: ${{ steps.prepare.outputs.os }}
-    steps:
-      - name: prepare
-        run: |
-          echo ${{ env.os }}
-          echo "os=${{ env.os }}" >> $GITHUB_OUTPUT
-
   print:
     runs-on: ubuntu-latest
-    needs: prepare
-    env:
-      os: "A, B"
     strategy:
       matrix:
-        os: ${{ needs.prepare.outputs.os }}
+        os: ${{ fromJSON(inputs.os) }}
     steps:
       - name: print_title
         run: |
           echo ${{ matrix.os }}
-          echo "${{ needs.prepare.outputs.os }}"
 
