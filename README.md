@@ -23,3 +23,6 @@ create table person (name varchar(255), age int)
 
 run the main program
 `shell> sbt "runMain MainProg"`
+
+# CI/CD
+The `.github/workflows/ci.yaml` will be when code is pushed to `main` branch

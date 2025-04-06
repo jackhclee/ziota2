@@ -1,10 +1,17 @@
 scalaVersion := "2.13.16"
 
+
+organization := "xyz"
+version := "0.2.0"
+
+enablePlugins(JavaAppPackaging)
+
 val mainLib = Seq(
   "ch.qos.logback"         % "logback-classic"    % "1.5.17",
   "com.github.pureconfig" %% "pureconfig"         % "0.17.8",
   "com.h2database"         % "h2"                 % "2.3.232",
   "dev.zio"               %% "zio"                % Version.zio,
+  "dev.zio"               %% "zio-cli"            % "0.7.1",
   "dev.zio"               %% "zio-http"           % "3.1.0",
   "dev.zio"               %% "zio-json"           % "0.7.36",
   "dev.zio"               %% "zio-logging-slf4j2" % "2.5.0",

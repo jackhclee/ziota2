@@ -16,5 +16,6 @@ jobs:
     steps:
       - name: print_title
         run: |
+          echo ${{ github.event_name }}
           echo ${{ matrix.os }}
 
