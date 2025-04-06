@@ -29,7 +29,7 @@ jobs:
         uses: sbt/setup-sbt@v1
       - id: restore_source
         name: Restore source
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.2.3
         with:
           path: ${{ github.workspace }}
           key: src-${{ github.run_id }}
@@ -51,7 +51,7 @@ jobs:
         run: |
           docker save wiremock/wiremock:3.12.1 -o wiremock-wiremock-3.12.1.tar
       - id: cache_docker_image
-        uses: actions/cache/save@4
+        uses: actions/cache/save@4.2.3
         with:
           path: wiremock-wiremock-3.12.1.tar
           key: wiremock-wiremock-3.12.1.tar
