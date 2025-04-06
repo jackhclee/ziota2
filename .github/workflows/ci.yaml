@@ -42,7 +42,7 @@ jobs:
           fail-on-cache-miss: false
       - id: load_docker_image
         name: Load Docker image
-        if: ${{ steps.restore_docker_image.outputs.cache-hit = 'true' }}
+        if: ${{ steps.restore_docker_image.outputs.cache-hit == 'true' }}
         run: |
           docker load -i wiremock-wiremock-3.12.1.tar
       - id: build
