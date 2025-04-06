@@ -10,6 +10,9 @@ jobs:
     name: Checkout
     runs-on: ubuntu-latest
     steps:
+      - id: prn
+        run:
+          echo ${{ github.workspace }}
       - id: co
         name: Checkout source code
         uses: actions/checkout@v4
