@@ -35,7 +35,7 @@ jobs:
           key: src-${{ github.run_id }}
       - id: restore_docker_images
         name: Restore Docker image
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v4.2.3
         with:
           path: .docker_images/
           key: docker-images
