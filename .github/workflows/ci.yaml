@@ -42,7 +42,7 @@ jobs:
           fail-on-cache-miss: false
       - id: load_docker_image
         name: Load Docker image
-        if: ${{ steps.restore_docker_image.outputs.cache-hit == 'true' }}
+        if: ${{ steps.restore_docker_images.outputs.cache-hit == 'true' }}
         run: |
           docker load -i ./docker_images/wiremock-wiremock-3.12.1.tar
           docker load -i ./docker_images/confluentinc-cp-kafka-7.9.0.tar
@@ -50,14 +50,14 @@ jobs:
         name: Build and Test
         run: sbt test
       - id: save_docker_image
-        if: ${{ steps.restore_docker_image.outputs.cache-hit != 'true' }}
+        if: ${{ steps.restore_docker_images.outputs.cache-hit != 'true' }}
         run: |
           mkdir ./docker_images
           docker save wiremock/wiremock:3.12.1    -o ./docker_images/wiremock-wiremock-3.12.1.tar
           docker save confluentinc/cp-kafka:7.9.0 -o ./docker_images/confluentinc-cp-kafka-7.9.0.tar
       - id: cache_docker_image
         uses: actions/cache/save@4.2.3
-        if: ${{ steps.restore_docker_image.outputs.cache-hit != 'true' }}
+        if: ${{ steps.restore_docker_images.outputs.cache-hit != 'true' }}
         with:
           path: ./docker_images/
           key: docker-images
