@@ -1,12 +1,18 @@
+import org.testcontainers.containers.GenericContainer
 import org.wiremock.integrations.testcontainers.WireMockContainer
 import zio.{Scope, ZIO, ZInputStream}
 import zio.test._
 import zio.http._
+import zio.prelude.ZValidation
+import zio.test.TestAspect.sequential
+
 
 object MainSpec extends ZIOSpecDefault {
   val wiremockServer: WireMockContainer = new WireMockContainer("wiremock/wiremock:3.12.1")
   wiremockServer.withMappingFromResource("mappings/helloworld.json")
   wiremockServer.start()
+  val confluentKafka = new GenericContainer("confluentinc/cp-kafka:7.9.0")
+  confluentKafka.start()
 
   def spec = {
     suite("MainSpec")(
@@ -42,7 +48,33 @@ object MainSpec extends ZIOSpecDefault {
             zos   <- ZIO.writeFileOutputStream("aa.json")
             _     <- zos.write(bytes)
           } yield assertTrue(true)
+        ),
+        test("pre-lude")({
+          val counter: Int = -1
+          val check1 = ZValidation.fromPredicateWith("should be larger than 0")(counter)(_ > 0).log("LOG1")
+          val check2 = ZValidation.fromPredicateWith("should be even")(counter)(_ % 2 == 0)
+
+          val result = check1 zipPar check2
+
+          result.mapError( e => {
+            println(s"$e")
+            e
+          } )
+
+          result.getLog.foreach(w => println(s"############ $w"))
+
+          assertTrue(result.isFailure)
+        }
+        ),
+        test("Calculator add") ({
+          assertTrue(Calculator.add(1, 2) == 3 && Calculator.add(-1, 2) == -2)
+        }
+        ),
+        test("Calculator select") ({
+          assertTrue(Calculator.select(1) == "A" && Calculator.select(2) == "B")
+        }
         )
+
       )
     ) @@ TestAspect.sequential @@ TestAspect.timed
   }
