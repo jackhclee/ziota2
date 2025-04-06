@@ -40,7 +40,7 @@ jobs:
         name: Restore Docker image
         uses: actions/cache/restore@v4.2.3
         with:
-          path: .docker_images/
+          path: ${{ github.workspace }}/docker_images/
           key: docker-images
           fail-on-cache-miss: false
       - id: load_docker_image
@@ -62,6 +62,6 @@ jobs:
         uses: actions/cache/save@v4.2.3
         if: ${{ steps.restore_docker_images.outputs.cache-hit != 'true' }}
         with:
-          path: ./docker_images/
+          path: ${{ github.workspace }}/docker_images/
           key: docker-images
 
