@@ -49,10 +49,12 @@ jobs:
         name: Build and Test
         run: sbt test
       - id: save_docker_image
+        if: ${{ steps.restore_docker_image.outputs.cache-hit != 'true' }}
         run: |
           docker save wiremock/wiremock:3.12.1 -o wiremock-wiremock-3.12.1.tar
       - id: cache_docker_image
         uses: actions/cache/save@4.2.3
+        if: ${{ steps.restore_docker_image.outputs.cache-hit != 'true' }}
         with:
           path: wiremock-wiremock-3.12.1.tar
           key: wiremock-wiremock-3.12.1.tar
