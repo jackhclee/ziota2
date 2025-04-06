@@ -27,13 +27,31 @@ jobs:
       - id: prep-build
         name: Setup SBT
         uses: sbt/setup-sbt@v1
-      - id: restore
+      - id: restore_source
         name: Restore source
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}
           key: src-${{ github.run_id }}
+      - id: restore_docker_image
+        name: Restore Docker image
+        uses: actions/cache/restore@v4
+        with:
+          path: wiremock-wiremock-3.12.1.tar
+          key: wiremock-wiremock-3.12.1.tar
+          fail-on-cache-miss: false
+      - id: load_docker_image
+        name: Load Docker image
+        run: |
+          docker load -i wiremock-wiremock-3.12.1.tar
       - id: build
         name: Build and Test
         run: sbt test
+      - id: save_docker_image
+        run: |
+          docker save wiremock/wiremock:3.12.1 -o wiremock-wiremock-3.12.1.tar
+      - id: cache_docker_image
+        use: actions/cache/save@4
+        path: wiremock-wiremock-3.12.1.tar
+        key: wiremock-wiremock-3.12.1.tar
 
