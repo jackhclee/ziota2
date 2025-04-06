@@ -24,6 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [checkout]
     steps:
+      - id: co
+        name: Checkout source code
+        uses: actions/checkout@v4
       - id: prep-build
         name: Setup SBT
         uses: sbt/setup-sbt@v1
