@@ -27,12 +27,12 @@ jobs:
       - id: prep-build
         name: Setup SBT
         uses: sbt/setup-sbt@v1
-      - id: restore_source
-        name: Restore source
-        uses: actions/cache/restore@v4.2.3
-        with:
-          path: ${{ github.workspace }}
-          key: src-${{ github.run_id }}
+#      - id: restore_source
+#        name: Restore source
+#        uses: actions/cache/restore@v4.2.3
+#        with:
+#          path: ${{ github.workspace }}
+#          key: src-${{ github.run_id }}
       - id: restore_docker_image
         name: Restore Docker image
         uses: actions/cache/restore@v4
