@@ -52,6 +52,7 @@ jobs:
           docker save wiremock/wiremock:3.12.1 -o wiremock-wiremock-3.12.1.tar
       - id: cache_docker_image
         uses: actions/cache/save@4
-        path: wiremock-wiremock-3.12.1.tar
-        key: wiremock-wiremock-3.12.1.tar
+        with:
+          path: wiremock-wiremock-3.12.1.tar
+          key: wiremock-wiremock-3.12.1.tar
 
