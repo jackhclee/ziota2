@@ -54,7 +54,7 @@ jobs:
         run: |
           mkdir ./docker_images
           docker save wiremock/wiremock:3.12.1    -o ./docker_images/wiremock-wiremock-3.12.1.tar
-          docker save confluentinc/cp-kafka-7.9.0 -o ./docker_images/confluentinc-cp-kafka-7.9.0.tar
+          docker save confluentinc/cp-kafka:7.9.0 -o ./docker_images/confluentinc-cp-kafka-7.9.0.tar
       - id: cache_docker_image
         uses: actions/cache/save@4.2.3
         if: ${{ steps.restore_docker_image.outputs.cache-hit != 'true' }}
