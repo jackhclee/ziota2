@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: j1
         run: |
-          echo "j1: ${{ github.event }} ${{ GITHUB_REF }}"
+          echo "j1: ${{ github.event }} ${{ github.ref_name π}}"
