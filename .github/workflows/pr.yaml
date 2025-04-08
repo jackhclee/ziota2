@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: j1
         run: |
-          echo "j1: ${{ github.event_name }} ${{ github.base_ref }} ${{ github.sha }} ${{ github.head_ref }} ${{ github.ref_name }}"
+          echo "j1: ${{ github.event_name }} ${{ github.base_ref }} GITHUB_SHA $GITHUB_SHA github.sha ${{ github.sha }} ${{ github.head_ref }} ${{ github.ref_name }}"
