@@ -1,0 +1,10 @@
+on:
+  pull_request:
+
+jobs:
+  a:
+    runs-on: ubuntu-latest
+    steps:
+      - name: j1
+        run: |
+          echo "j1: ${{ github.event }} ${{ GITHUB_REF }}"
