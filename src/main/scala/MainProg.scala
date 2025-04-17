@@ -1,5 +1,9 @@
+package main
+
+import com.typesafe.config.{Config, ConfigFactory}
 import io.getquill.{H2ZioJdbcContext, Query, SnakeCase}
 import io.getquill.jdbczio.Quill
+import pureconfig.ConfigSource
 import zio.Exit.Success
 import zio.json.{DecoderOps, DeriveJsonDecoder, DeriveJsonEncoder, EncoderOps, JsonDecoder, JsonEncoder}
 import zio.logging.backend.SLF4J
@@ -25,24 +29,33 @@ object Squad {
 class DataService(quill: Quill.H2[SnakeCase]) {
   import quill._
 
-  def report() = run (
-     sql"""SELECT max(age) FROM person""".as[Query[Int]]
+  def report() = run(
+    sql"""SELECT max(age) FROM person""".as[Query[Int]]
   )
+
   def insertTwoPersons(person1: Person, person2: Person): ZIO[Any, Throwable, List[Person]] = {
-      val action1 = run(query[Person].insertValue(lift(person1)))
-      val action2 = run(query[Person].insertValue(lift(person2)))
-      quill.transaction {
-        for {
-          _ <- action1
-          _ = if (person2.name.equals("John")) { throw new RuntimeException("Never store John")}
-          _ <- action2
-          p <- run(query[Person])
-        } yield p
-      }
+    val action1 = run(query[Person].insertValue(lift(person1)))
+    val action2 = run(query[Person].insertValue(lift(person2)))
+    quill.transaction {
+      for {
+        _ <- action1
+        _ = if (person2.name.equals("John")) { throw new RuntimeException("Never store John")}
+        _ <- action2
+        p <- run(query[Person])
+      } yield p
     }
-  def updatePerson(name: String, age: Int): ZIO[Any, SQLException, Long] = run { query[Person].filter(_.name.equals(lift(name))).updateValue(lift(Person(name, age))) }
-  def findPerson(name: String): ZIO[Any, SQLException, List[Person]] = run { query[Person].filter(_.name.equals(lift(name)))}
+  }
+
+  def updatePerson(name: String, age: Int): ZIO[Any, SQLException, Long] = run(
+    query[Person].filter(_.name.equals(lift(name))).updateValue(lift(Person(name, age)))
+  )
+
+  def findPerson(name: String): ZIO[Any, SQLException, List[Person]] = run(
+    query[Person].filter(_.name.equals(lift(name)))
+  )
+
   def getPeople: ZIO[Any, SQLException, List[Person]] = run(query[Person])
+
   def insertPerson(person: Person): ZIO[Any, SQLException, Long] = run(query[Person].insertValue(lift(person)))
 }
 
@@ -80,6 +93,8 @@ object MainProg extends ZIOAppDefault {
     jsonStr.fromJson[Squad]
     jsonStr
   }
+
+  val cfg = ConfigFactory.load
 
   val samplingPeriodMs = 1
   override def run = SamplingProfiler(Duration.fromMillis(samplingPeriodMs)).profile {
