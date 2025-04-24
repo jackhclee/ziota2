@@ -8,3 +8,6 @@ target/
 .idea/
 .bsp/
 
+# mill
+out/
+
