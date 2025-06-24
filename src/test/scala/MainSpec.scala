@@ -5,6 +5,8 @@ import zio.test._
 import zio.http._
 import zio.prelude.ZValidation
 import zio.test.TestAspect.sequential
+import com.github.pemistahl.lingua.api._
+import com.github.pemistahl.lingua.api.Language._
 
 
 object MainSpec extends ZIOSpecDefault {
@@ -73,8 +75,14 @@ object MainSpec extends ZIOSpecDefault {
         test("Calculator select") ({
           assertTrue(Calculator.select(1) == "A" && Calculator.select(2) == "B")
         }
+        ),
+        test("Lang spec") ({
+          val langDetector = com.github.pemistahl.lingua.api.LanguageDetectorBuilder.fromLanguages(CHINESE, JAPANESE, ENGLISH).build
+          assertTrue(Calculator.select(1) == "A" &&
+            Calculator.select(2) == "B" &&
+            langDetector.detectLanguageOf("Information大學") == CHINESE)
+        }
         )
-
       )
     ) @@ TestAspect.sequential @@ TestAspect.timed
   }
