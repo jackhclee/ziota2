@@ -8,7 +8,7 @@ target/
 .idea/
 .bsp/
 .DS_Store/
-**/.DS_Store/
+src/.DS_Store/
 
 # mill
 out/
