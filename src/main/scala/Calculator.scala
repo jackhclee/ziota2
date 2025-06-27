@@ -11,4 +11,10 @@ object Calculator {
       case a if a == 2 => "B"
     }
   }
+
+  case class Ma(name: String, age: Int)
+
+  def createList() = {
+    List(Ma("A", 99), Ma("B", 100)).map((1 ,_)).map(_._2.age)
+  }
 }
