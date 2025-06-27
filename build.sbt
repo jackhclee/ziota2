@@ -25,7 +25,7 @@ val mainLib = Seq(
   "ch.qos.logback"         % "logback-classic"    % "1.5.17",
   "com.github.pureconfig" %% "pureconfig"         % "0.17.8",
   "com.h2database"         % "h2"                 % "2.3.232",
-  "org.postgresql"         % "postgresql"         % "42.7.5",
+  "org.postgresql"         % "postgresql"         % "42.7.7",
   "dev.zio"               %% "zio"                % Version.zio,
   "dev.zio"               %% "zio-cli"            % "0.7.1",
   "dev.zio"               %% "zio-http"           % "3.1.0",
