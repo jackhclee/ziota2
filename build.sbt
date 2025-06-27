@@ -1,3 +1,13 @@
+import ReleaseTransformations.*
+import sbtrelease.ReleasePlugin.*
+import sbt.*
+import Keys.*
+import sbt.complete.DefaultParsers.*
+import sbt.complete.Parser
+import sbtrelease.Version.Bump
+import sbtrelease.Version
+import sbtrelease.expectedSnapshotVersionError
+
 scalaVersion := "2.13.16"
 
 val scala212 = "2.12.20"
@@ -40,5 +50,17 @@ libraryDependencies ++= mainLib ++ testLib
 libraryDependencies += compilerPlugin("dev.zio" %% "zio-profiling-tagging-plugin" % "0.3.2")
 
 testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+
+releaseVersion := { rawVersion =>
+//  Version(rawVersion).map(v =>
+//     v.string).getOrElse("XXX")
+  rawVersion
+}
+
+releaseProcess := Seq[ReleaseStep](
+  inquireVersions,
+  setReleaseVersion,
+  setNextVersion
+)
 
 
