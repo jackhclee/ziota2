@@ -1,10 +1,12 @@
 import org.testcontainers.containers.GenericContainer
 import org.wiremock.integrations.testcontainers.WireMockContainer
-import zio.{Scope, ZIO, ZInputStream}
+import zio.{Scope, ZIO, ZInputStream, ZLayer}
 import zio.test._
 import zio.http._
 import zio.prelude.ZValidation
 import zio.test.TestAspect.sequential
+import service.{ImageService, LiveImageService}
+
 import com.github.pemistahl.lingua.api._
 import com.github.pemistahl.lingua.api.Language._
 
@@ -83,7 +85,19 @@ object MainSpec extends ZIOSpecDefault {
             langDetector.detectLanguageOf("Information大學") == CHINESE)
         }
         )
-      )
+      ),
+      suite("Group2")(
+        test("g2-t1")(
+          for {
+           r <- ImageService.version
+          } yield assertTrue(r == 1)
+        ),
+        test("g2-t2")(
+          for {
+            r <- ImageService.patch
+          } yield assertTrue(r == 2)
+        )
+      ).provide(ZLayer.succeed(new LiveImageService))
     ) @@ TestAspect.sequential @@ TestAspect.timed
   }
 }
