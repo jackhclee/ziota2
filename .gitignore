@@ -7,4 +7,9 @@ hs_err_pid*
 target/
 .idea/
 .bsp/
+.DS_Store
+
+
+# mill
+out/
 

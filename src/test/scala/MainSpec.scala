@@ -7,6 +7,10 @@ import zio.prelude.ZValidation
 import zio.test.TestAspect.sequential
 import service.{ImageService, LiveImageService}
 
+import com.github.pemistahl.lingua.api._
+import com.github.pemistahl.lingua.api.Language._
+
+
 object MainSpec extends ZIOSpecDefault {
   val wiremockServer: WireMockContainer = new WireMockContainer("wiremock/wiremock:3.12.1")
   wiremockServer.withMappingFromResource("mappings/helloworld.json")
@@ -73,6 +77,13 @@ object MainSpec extends ZIOSpecDefault {
         test("Calculator select") ({
           assertTrue(Calculator.select(1) == "A" && Calculator.select(2) == "B")
         }
+        ),
+        test("Lang spec") ({
+          val langDetector = com.github.pemistahl.lingua.api.LanguageDetectorBuilder.fromLanguages(CHINESE, JAPANESE, ENGLISH).build
+          assertTrue(Calculator.select(1) == "A" &&
+            Calculator.select(2) == "B" &&
+            langDetector.detectLanguageOf("Information大學") == CHINESE)
+        }
         )
       ),
       suite("Group2")(
@@ -87,7 +98,6 @@ object MainSpec extends ZIOSpecDefault {
           } yield assertTrue(r == 2)
         )
       ).provide(ZLayer.succeed(new LiveImageService))
-
     ) @@ TestAspect.sequential @@ TestAspect.timed
   }
 }

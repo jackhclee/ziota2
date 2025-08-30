@@ -1,9 +1,10 @@
 package main
 
-import com.typesafe.config.{Config, ConfigFactory}
-import io.getquill.{H2ZioJdbcContext, Query, SnakeCase}
+import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
+import io.getquill.{Query, SnakeCase}
 import io.getquill.jdbczio.Quill
-import pureconfig.ConfigSource
+import pureconfig.generic.ProductHint
+
 import zio.Exit.Success
 import zio.json.{DecoderOps, DeriveJsonDecoder, DeriveJsonEncoder, EncoderOps, JsonDecoder, JsonEncoder}
 import zio.logging.backend.SLF4J
@@ -12,6 +13,7 @@ import zio.profiling.sampling.SamplingProfiler._
 import zio.{Duration, ExitCode, Scope, ZIO, ZIOApp, ZIOAppArgs, ZIOAppDefault, ZLayer}
 
 import java.sql.SQLException
+import java.util.Properties
 
 case class Person(name: String, age: Int)
 case class Squad(members: List[Person])
@@ -26,7 +28,7 @@ object Squad {
   implicit val encoder: JsonEncoder[Squad] = DeriveJsonEncoder.gen[Squad]
 }
 
-class DataService(quill: Quill.H2[SnakeCase]) {
+class DataService(quill: Quill.Postgres[SnakeCase]) {
   import quill._
 
   def report() = run(
@@ -55,8 +57,8 @@ class DataService(quill: Quill.H2[SnakeCase]) {
   )
 
   def getPeople: ZIO[Any, SQLException, List[Person]] = run(query[Person])
-
-  def insertPerson(person: Person): ZIO[Any, SQLException, Long] = run(query[Person].insertValue(lift(person)))
+  def insertPerson(person: Person): ZIO[Any, SQLException, Long] = run(query[Person].insertValue(lift(person))
+    .onConflictUpdate(_.name)((t, e) => t.age -> e.age * 2))
 }
 
 
@@ -82,7 +84,27 @@ object DataService {
   val live = ZLayer.fromFunction(new DataService(_))
 }
 
+object DBConfig {
+  def getDataSource(appConfig: AppConfig): HikariDataSource = {
+    val props = new Properties()
+    props.setProperty("dataSourceClassName", appConfig.jdbcDataSource)
+    props.setProperty("dataSource.user", appConfig.dbUser)
+    props.setProperty("dataSource.password", appConfig.dbPassword)
+    props.setProperty("dataSource.databaseName", appConfig.dbCatalog)
+
+    val config = new HikariConfig(props)
+    new HikariDataSource(config)
+  }
+}
+
 object MainProg extends ZIOAppDefault {
+
+  import pureconfig._
+  import pureconfig.generic.auto._
+
+  implicit def hint[A]: ProductHint[A] = ProductHint[A](ConfigFieldMapping(CamelCase, CamelCase))
+
+  val appConfig = ConfigSource.default.loadOrThrow[AppConfig]
 
   import Squad._
 
@@ -101,7 +123,8 @@ object MainProg extends ZIOAppDefault {
     (for {
       before <- DataService.findPerson("Jack")
       _      <- DataService.insertPerson(Person("Long", 1999))
-      _      <- DataService.insertTwoPersons(Person("Jack", 1999), Person("John", 1999)).catchAllDefect(e => ZIO.logError(e.getMessage))
+      _      <- DataService.insertPerson(Person("Long", 2000))
+      //_      <- DataService.insertTwoPersons(Person("Jack", 1999), Person("Leo", 1999)).catchAllDefect(e => ZIO.logError(e.getMessage))
       after  <- DataService.findPerson("Jack")
       _      <- DataService.updatePerson("Jack", 2999)
       count  <- DataService.report()
@@ -116,11 +139,13 @@ object MainProg extends ZIOAppDefault {
     } yield ())
       .provide(
         DataService.live,
-        Quill.H2.fromNamingStrategy(SnakeCase),
-        Quill.DataSource.fromPrefix("h2")
+//        Quill.H2.fromNamingStrategy(SnakeCase),
+//        Quill.DataSource.fromPrefix("h2")
+        Quill.Postgres.fromNamingStrategy(io.getquill.SnakeCase),
+        ZLayer.succeed(DBConfig.getDataSource(appConfig))
     )
       .debug("Results")
       .exitCode
 
-  }.flatMap(h => h.stackCollapseToFile(s"profile.$samplingPeriodMs.folded"))
+  }.flatMap(_.stackCollapseToFile(s"profile.$samplingPeriodMs.folded"))
 }
