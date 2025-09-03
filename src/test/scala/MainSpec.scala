@@ -7,6 +7,7 @@ import zio.prelude.ZValidation
 import zio.test.TestAspect.sequential
 import com.github.pemistahl.lingua.api._
 import com.github.pemistahl.lingua.api.Language._
+import ziota._
 
 
 object MainSpec extends ZIOSpecDefault {
@@ -18,6 +19,13 @@ object MainSpec extends ZIOSpecDefault {
 
   def spec = {
     suite("MainSpec")(
+      suite("TestHarness") (
+        test("harness1") (
+          for {
+            name <- ZIO.succeed(CommonTestHarness.hello)
+          } yield assertTrue(name == "HELLO")
+        )
+      ),
       suite("Group1")(
         test("should get HTTP response from WireMock")(
           for {

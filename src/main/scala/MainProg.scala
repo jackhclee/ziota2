@@ -49,7 +49,7 @@ class DataService(quill: Quill.Postgres[SnakeCase]) {
   def findPerson(name: String): ZIO[Any, SQLException, List[Person]] = run { query[Person].filter(_.name.equals(lift(name)))}
   def getPeople: ZIO[Any, SQLException, List[Person]] = run(query[Person])
   def insertPerson(person: Person): ZIO[Any, SQLException, Long] = run(query[Person].insertValue(lift(person))
-    .onConflictUpdate(_.name)((t, e) => t.age -> e.age * 2))
+    .onConflictUpdate(_.name)((t, e) => t.age -> t.age * 2))
 }
 
 
@@ -107,11 +107,18 @@ object MainProg extends ZIOAppDefault {
     jsonStr
   }
 
+  def sampleFunction(a: Int) = {
+    for {
+      a1 <- ZIO.attempt(a)
+      b <- ZIO.attempt(a1 + 1)
+    } yield b
+  }
+
   val samplingPeriodMs = 1
   override def run = SamplingProfiler(Duration.fromMillis(samplingPeriodMs)).profile {
     (for {
       before <- DataService.findPerson("Jack")
-      _      <- DataService.insertPerson(Person("Long", 1999))
+      _      <- DataService.insertPerson(Person("John", 1999))
       _      <- DataService.insertPerson(Person("Long", 2000))
       //_      <- DataService.insertTwoPersons(Person("Jack", 1999), Person("Leo", 1999)).catchAllDefect(e => ZIO.logError(e.getMessage))
       after  <- DataService.findPerson("Jack")

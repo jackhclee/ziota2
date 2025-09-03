@@ -8,7 +8,7 @@ import sbtrelease.Version.Bump
 import sbtrelease.Version
 import sbtrelease.expectedSnapshotVersionError
 
-scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "2.13.16"
 
 val scala212 = "2.12.20"
 val scala213 = "2.13.16"
@@ -17,7 +17,7 @@ val supportedScalaVersions = List(scala212, scala213)
 
 crossScalaVersions := supportedScalaVersions
 
-organization := "xyz"
+ThisBuild / organization := "xyz"
 
 enablePlugins(JavaAppPackaging)
 
@@ -26,8 +26,9 @@ val mainLib = Seq(
   "com.github.pureconfig" %% "pureconfig"         % "0.17.8",
   "com.h2database"         % "h2"                 % "2.3.232",
   "org.postgresql"         % "postgresql"         % "42.7.7",
+  "dev.zio"               %% "zio-aws-rds"        % "7.32.29.1",
   "dev.zio"               %% "zio"                % Version.zio,
-  "dev.zio"               %% "zio-cli"            % "0.7.1",
+  "dev.zio"               %% "zio-cli"            % "0.7.2",
   "dev.zio"               %% "zio-http"           % "3.1.0",
   "dev.zio"               %% "zio-json"           % "0.7.36",
   "dev.zio"               %% "zio-logging-slf4j2" % "2.5.0",
@@ -35,7 +36,8 @@ val mainLib = Seq(
   "dev.zio"               %% "zio-profiling"      % "0.3.2",
   "io.getquill"           %% "quill-jdbc-zio"     % "4.8.5",
   "com.zaxxer"             % "HikariCP"           % "6.3.0",
-  "com.github.pemistahl"   % "lingua"             % "1.2.2"
+  "com.github.pemistahl"   % "lingua"             % "1.2.2",
+  "org.typelevel"         %% "cats-core"          % "2.13.0"
 )
 
 val testLib = Seq(
@@ -44,6 +46,16 @@ val testLib = Seq(
   "dev.zio"               %% "zio-test-sbt"       % Version.zio % Test,
   "dev.zio"               %% "zio-test-magnolia"  % Version.zio % Test
 )
+
+
+lazy val common = (project in file("module/common"))
+  .settings(
+    name := "common",
+)
+
+lazy val root =  (project in file("."))
+  .dependsOn(common % "compile -> compile; test -> test")
+  .aggregate(common)
 
 libraryDependencies ++= mainLib ++ testLib
 
@@ -62,5 +74,7 @@ releaseProcess := Seq[ReleaseStep](
   setReleaseVersion,
   setNextVersion
 )
+
+resolvers += Resolver.sonatypeCentralRepo("releases")
 
 
