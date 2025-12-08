@@ -11,11 +11,11 @@ import sbtrelease.expectedSnapshotVersionError
 ThisBuild / scalaVersion := "2.13.18"
 
 val scala212 = "2.12.20"
-val scala213 = "2.13.16"
+val scala213 = "2.13.18"
 
 val supportedScalaVersions = List(scala212, scala213)
 
-crossScalaVersions := supportedScalaVersions
+ThisBuild / crossScalaVersions := supportedScalaVersions
 
 ThisBuild / organization := "xyz"
 
@@ -26,7 +26,7 @@ val mainLib = Seq(
   "com.github.pureconfig" %% "pureconfig"         % "0.17.8",
   "com.h2database"         % "h2"                 % "2.3.232",
   "org.postgresql"         % "postgresql"         % "42.7.7",
-  "dev.zio"               %% "zio-aws-rds"        % "7.32.29.1",
+  "dev.zio"               %% "zio-aws-rds"        % "7.31.51.1",
   "dev.zio"               %% "zio"                % Version.zio,
   "dev.zio"               %% "zio-cli"            % "0.7.2",
   "dev.zio"               %% "zio-http"           % "3.1.0",
@@ -40,8 +40,7 @@ val mainLib = Seq(
   "org.typelevel"         %% "cats-core"          % "2.13.0",
   "org.json4s"            %% "json4s-native"      % "4.1.0-M8",
   "org.json4s"            %% "json4s-jackson"     % "4.1.0-M8",
-  "org.apache.jena" % "jena-arq" % "5.4.0"
-
+  "org.apache.jena"        % "jena-arq"           % "5.4.0"
 )
 
 val testLib = Seq(
@@ -57,14 +56,13 @@ val testLib = Seq(
   "org.junit.platform"     % "junit-platform-suite" % "1.13.4"    % Test
 )
 
-
 lazy val common = (project in file("module/common"))
   .settings(
     name := "common",
-)
+  )
 
-lazy val root =  (project in file("."))
-  .dependsOn(common % "compile -> compile; test -> test")
+lazy val root = (project in file("."))
+  .dependsOn(common % "compile->compile;test->test")
   .aggregate(common)
 
 libraryDependencies ++= mainLib ++ testLib
