@@ -11,7 +11,7 @@ object DataServiceSpec extends ZIOSpecDefault {
         _        <- DataService.insertPerson(Person("Jack", 1999))
         _        <- DataService.insertPerson(Person("Jack", 2000))
         persons  <- DataService.findPerson("Jack")
-      } yield (assertTrue(persons.contains(Person("Jack", 4000))))
+      } yield (assertTrue(persons.contains(Person("Jack", 1999 * 2))))
     ).provide(
       DataService.live,
       Quill.Postgres.fromNamingStrategy(io.getquill.SnakeCase),
