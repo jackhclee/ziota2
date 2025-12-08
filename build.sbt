@@ -8,7 +8,7 @@ import sbtrelease.Version.Bump
 import sbtrelease.Version
 import sbtrelease.expectedSnapshotVersionError
 
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "2.13.18"
 
 val scala212 = "2.12.20"
 val scala213 = "2.13.16"
@@ -37,14 +37,24 @@ val mainLib = Seq(
   "io.getquill"           %% "quill-jdbc-zio"     % "4.8.5",
   "com.zaxxer"             % "HikariCP"           % "6.3.0",
   "com.github.pemistahl"   % "lingua"             % "1.2.2",
-  "org.typelevel"         %% "cats-core"          % "2.13.0"
+  "org.typelevel"         %% "cats-core"          % "2.13.0",
+  "org.json4s"            %% "json4s-native"      % "4.1.0-M8",
+  "org.json4s"            %% "json4s-jackson"     % "4.1.0-M8",
+  "org.apache.jena" % "jena-arq" % "5.4.0"
+
 )
 
 val testLib = Seq(
-  "org.wiremock.integrations.testcontainers"      % "wiremock-testcontainers-module" % "1.0-alpha-14" % Test,
-  "dev.zio"               %% "zio-test"           % Version.zio % Test,
-  "dev.zio"               %% "zio-test-sbt"       % Version.zio % Test,
-  "dev.zio"               %% "zio-test-magnolia"  % Version.zio % Test
+  "org.wiremock.integrations.testcontainers"        % "wiremock-testcontainers-module" % "1.0-alpha-14" % Test,
+  "dev.zio"               %% "zio-test"             % Version.zio % Test,
+  "dev.zio"               %% "zio-test-sbt"         % Version.zio % Test,
+  "dev.zio"               %% "zio-test-magnolia"    % Version.zio % Test,
+  "com.github.sbt.junit"   % "jupiter-interface"    % "0.15.1"    % Test,
+  "io.cucumber"           %% "cucumber-scala"       % "6.10.4"    % Test,
+  "io.cucumber"            % "cucumber-junit-platform-engine"     % "7.28.2" % Test,
+  "org.junit.jupiter"      % "junit-jupiter-engine" % "5.13.4"    % Test,
+  "org.junit.jupiter"      % "junit-jupiter-api"    % "5.13.4"    % Test,
+  "org.junit.platform"     % "junit-platform-suite" % "1.13.4"    % Test
 )
 
 
@@ -78,3 +88,4 @@ releaseProcess := Seq[ReleaseStep](
 resolvers += Resolver.sonatypeCentralRepo("releases")
 
 
+Test / parallelExecution := false

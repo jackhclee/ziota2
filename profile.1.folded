@@ -1,0 +1,9 @@
+MainProg.run(MainProg.scala:111);DataService.getPeople(MainProg.scala:64);DataService.getPeople(MainProg.scala:50) 1
+MainProg.run(MainProg.scala:111);DataService.insertPerson(MainProg.scala:69);DataService.insertPerson(MainProg.scala:51) 3
+MainProg.run(MainProg.scala:111);DataService.insertPerson(MainProg.scala:69) 2
+MainProg.run(MainProg.scala:111);DataService.findPerson(MainProg.scala:63);DataService.findPerson(MainProg.scala:49) 16
+MainProg.run(MainProg.scala:111);DataService.report(MainProg.scala:57) 1
+MainProg.run(MainProg.scala:111);DataService.findPerson(MainProg.scala:63) 6
+MainProg.run(MainProg.scala:111);DataService.updatePerson(MainProg.scala:62) 1
+MainProg.run(MainProg.scala:111) 410
+MainProg.run(MainProg.scala:111);DataService.updatePerson(MainProg.scala:62);DataService.updatePerson(MainProg.scala:48) 1
