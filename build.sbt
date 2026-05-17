@@ -44,7 +44,7 @@ val mainLib = Seq(
   "org.apache.jena"        % "jena-arq"           % "5.4.0",
   "org.flywaydb"           % "flyway-core"        % "11.19.0",
   "org.flywaydb"           % "flyway-database-postgresql" % "11.19.0" % "runtime",
-  "commons-cli"            % "commons-cli"        % "1.5.0"
+  "commons-cli"            % "commons-cli"        % "1.11.0"
 )
 
 val testLib = Seq(
