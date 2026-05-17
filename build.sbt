@@ -61,6 +61,8 @@ val testLib = Seq(
   "org.junit.jupiter"      % "junit-jupiter-api"    % "6.0.3",
   "org.junit.platform"     % "junit-platform-suite" % "6.0.3"
 ).map(_ % Test)
+  "org.apache.jena"        % "jena-arq"           % "5.4.0"
+)
 
 lazy val common = (project in file("module/common"))
   .settings(
