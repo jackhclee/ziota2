@@ -18,4 +18,5 @@ jobs:
         run: |
           echo ${{ github.event_name }}
           echo ${{ matrix.os }}
+          echo "::warning file=app.js,line=1,col=5,endColumn=7,title=YOUR-TITLE::Missing semicolon"
 
